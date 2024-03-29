@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set the database connection variables
-PSQL="psql --username=freecodecamp --dbname=number_guess -t -c"
+PSQL="psql --username=freecodecamp --dbname=number_guess -t --no-align -c"
 
 # Prompt the user for a username
 echo -e "Enter your username:"
@@ -26,7 +26,7 @@ else
   GAMES_PLAYED=${USER_FIELDS[1]}
   BEST_GAME=${USER_FIELDS[2]}
   # Display the welcome message with user statistics
-  echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
+  echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses. "
 fi
 
 # Generate a random secret number between 1 and 1000
@@ -58,15 +58,12 @@ while true; do
 done
 
 # Update the user's game statistics
-# if [[ -n $USER_DATA ]]; then
-  UPDATED_GAMES_PLAYED=$((GAMES_PLAYED + 1))
-  UPDATED_BEST_GAME=$(($BEST_GAME < $GUESSES ? $BEST_GAME : $GUESSES))
-  UPDATE_QUERY="UPDATE users SET games_played=$UPDATED_GAMES_PLAYED, best_game=$UPDATED_BEST_GAME WHERE username='$USERNAME'"
-  UPDATE_RESULT=$($PSQL "$UPDATE_QUERY")
-  echo $UPDATE_RESULT
-# else
-#   INSERT_RESULT=$($PSQL "INSERT INTO users(username, games_played, best_game) VALUES('$USERNAME', 1, $GUESSES)")
-# fi
+UPDATED_GAMES_PLAYED=$((GAMES_PLAYED + 1))
+UPDATED_BEST_GAME=$(($BEST_GAME < $GUESSES ? $BEST_GAME : $GUESSES))
+UPDATE_QUERY="UPDATE users SET games_played='$UPDATED_GAMES_PLAYED', best_game='$UPDATED_BEST_GAME' WHERE username='$USERNAME'"
+UPDATE_RESULT=$($PSQL "$UPDATE_QUERY")
+echo $UPDATE_RESULT
+
 
 # Display the congratulatory message
 echo "You guessed it in $GUESSES tries. The secret number was $SECRET_NUMBER. Nice job!"
