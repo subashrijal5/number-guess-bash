@@ -14,12 +14,8 @@ USER_DATA=$($PSQL "SELECT username, games_played, best_game FROM users WHERE use
 if [[ -z $USER_DATA ]]; then
   INSERT_RESULT=$($PSQL "INSERT INTO users(username) VALUES('$USERNAME')")
   echo "Welcome, $USERNAME! It looks like this is your first time here."
-  #get user after inserting into database for default values 
-  USER_DATA=$($PSQL "SELECT username, games_played, best_game FROM users WHERE username='$USERNAME'")
-  IFS='|' read -ra USER_FIELDS <<< "$USER_DATA"
-  USERNAME=${USER_FIELDS[0]}
-  GAMES_PLAYED=${USER_FIELDS[1]}
-  BEST_GAME=${USER_FIELDS[2]}
+  GAMES_PLAYED=0
+  BEST_GAME=1000
 else
   # Extract user data from the query result
   IFS='|' read -ra USER_FIELDS <<< "$USER_DATA"
